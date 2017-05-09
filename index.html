@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SVG in HTML</title>
+  <style>
+    #container{
+      position: relative;
+    }
+    #origin{
+      width: 200px;
+      height: 200px;
+      background-image: url("flash.jpg");
+      border: 1px solid gray;
+      background-repeat: no-repeat;
+    }
+    .overlay{
+      width: 50px;
+      height: 50px;
+      opacity: 0.5;
+      background-color: blue;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+  <img id="thumbnail" src="flash.jpg" width="150" height="150" />
+  </div>
+  <div id="origin">
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    var $thumbnail = $("#thumbnail");
+    var $origin = $("#origin");
+    var $container = $("#container");
+    var WIDTH = 50;
+    var HEIGHT = 50;
+    var THUMBNAIL_WIDTH = 150;
+    var THUMBNAIL_HEIGHT = 150;
+    var lastTimeStamp = new Date();
+    $thumbnail.on("mousemove", function(e){
+      var now = new Date();
+      if(now - lastTimeStamp < 100){ //节流
+        return ;
+      }
+      var offsetX = e.offsetX;
+      var offsetY = e.offsetY;
+      if(offsetX - WIDTH/2 <= 0){
+        offsetX = WIDTH/2;
+      }
+      if(offsetX >= THUMBNAIL_WIDTH - WIDTH / 2){
+        offsetX = THUMBNAIL_WIDTH - WIDTH / 2
+      }
+
+      if(offsetY - HEIGHT/2 <= 0){
+        offsetY = HEIGHT/2;
+      }
+
+      if(offsetY >= THUMBNAIL_HEIGHT - HEIGHT / 2){
+        offsetY = THUMBNAIL_HEIGHT - HEIGHT /2;
+      }
+
+      
+      if($(".overlay").length === 0){
+        $container.append($("<div class='overlay'></div"));
+      }
+
+      offsetX = offsetX - WIDTH/2;
+      offsetY = offsetY - HEIGHT/2;
+      var $overlay = $(".overlay");
+      $overlay.css({"left": offsetX ,"top": offsetY});
+
+      $origin.css({
+        "background-position-x": (-offsetX * 4) + "px",
+        "background-position-y": (-offsetY * 4)  + "px"
+      });
+      lastTimeStamp = now;
+      
+    });
+
+  </script>
+</body>
+</html>
